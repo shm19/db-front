@@ -6,35 +6,55 @@ import NotebookEditor from "./components/NotebookEditor";
 import { NotebookContext } from "./contexts/NotebookContext";
 
 const App = () => {
-  const { addNotebook, setDatabaseSettings } = useContext(NotebookContext);
+  const { addNotebook, exportNotebooks, importNotebooks } = useContext(NotebookContext);
 
-  const executeQuery = (query) => {
-    if (query.trim().toLowerCase() === "select * from sample_data;") {
-      return `<div class="overflow-x-auto">
+  const executeQuery = async (query) => {
+    try {
+      const response = await fetch("http://localhost:8000/api/query", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ query }),
+      });
+
+      if (response.ok) {
+        const { data } = await response.json();
+        return `<div class="overflow-x-auto">
           <table class="min-w-full border border-gray-300">
             <thead>
               <tr class="bg-gray-100">
-                <th class="border px-4 py-2 text-left">ID</th>
-                <th class="border px-4 py-2 text-left">Name</th>
-                <th class="border px-4 py-2 text-left">Age</th>
+                ${Object.keys(data[0] || {})
+                  .map((key) => `<th class="border px-4 py-2 text-left">${key}</th>`)
+                  .join("")}
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td class="border px-4 py-2">1</td>
-                <td class="border px-4 py-2">John Doe</td>
-                <td class="border px-4 py-2">25</td>
-              </tr>
-              <tr>
-                <td class="border px-4 py-2">2</td>
-                <td class="border px-4 py-2">Jane Smith</td>
-                <td class="border px-4 py-2">30</td>
-              </tr>
+              ${data
+                .map(
+                  (row) =>
+                    `<tr>${Object.values(row)
+                      .map((value) => `<td class="border px-4 py-2">${value}</td>`)
+                      .join("")}</tr>`
+                )
+                .join("")}
             </tbody>
           </table>
         </div>`;
+      } else {
+        const { error } = await response.json();
+        return `<p class="text-red-500">${error}</p>`;
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      return `<p class="text-red-500">Failed to execute query. Please try again.</p>`;
     }
-    return `<p class="text-red-500">No matching data for this query. Try "SELECT * FROM sample_data;"</p>`;
+  };
+
+  const handleExportAll = () => {
+    exportNotebooks();
+  };
+
+  const handleImportAll = (file) => {
+    importNotebooks(file);
   };
 
   return (
@@ -42,7 +62,8 @@ const App = () => {
       <div className="bg-gray-100 min-h-screen">
         <Navbar
           onCreateNotebook={() => addNotebook("New Notebook")}
-          onSetDatabase={setDatabaseSettings}
+          onExportAll={handleExportAll}
+          onImportAll={handleImportAll}
         />
         <Routes>
           <Route path="/" element={<NotebooksList />} />

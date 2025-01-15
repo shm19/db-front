@@ -7,8 +7,8 @@ const SqlBlock = ({ block, updateBlock, executeQuery }) => {
   const [leftPanelWidth, setLeftPanelWidth] = useState(50); // Percentage width for the left panel
   const containerRef = useRef(null);
 
-  const runCode = () => {
-    const queryResult = executeQuery(block.content);
+  const runCode = async () => {
+    const queryResult = await executeQuery(block.content);
     updateBlock(block.content, queryResult);
     setShowResult(true);
   };
@@ -62,7 +62,7 @@ const SqlBlock = ({ block, updateBlock, executeQuery }) => {
       ></div>
 
       {/* Results Panel */}
-      <div className="flex-grow bg-gray-50 p-4">
+      <div className="flex-grow bg-gray-50 p-4 overflow-y-auto">
         {showResult ? (
           <div
             className="text-gray-800 text-sm"

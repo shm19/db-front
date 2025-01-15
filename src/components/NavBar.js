@@ -8,7 +8,6 @@ const Navbar = ({ onCreateNotebook, onSetDatabase, onExportAll, onImportAll }) =
   const id = location.pathname.includes("/notebook/") ? location.pathname.split("/")[2] : null;
 
   const { notebooks } = useContext(NotebookContext);
-  console.log(notebooks);
   const [isModalOpen, setModalOpen] = useState(false);
 
   const handleSaveSettings = (settings) => {
