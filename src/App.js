@@ -8,17 +8,26 @@ import { NotebookContext } from "./contexts/NotebookContext";
 const App = () => {
   const { addNotebook, exportNotebooks, importNotebooks } = useContext(NotebookContext);
 
-  const executeQuery = async (query) => {
+  const executeQuery = async (query, databaseSettings) => {
     try {
-      const response = await fetch("http://localhost:8000/api/query", {
+      const response = await fetch("http://localhost:8000/api/execute-query", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ query }),
+        body: JSON.stringify({
+          ...databaseSettings,
+          query,
+        }),
       });
 
       if (response.ok) {
         const { data, message } = await response.json();
-        if (Array.isArray(data)) {
+
+        // Handle SELECT queries (with rows)
+        if (data && Array.isArray(data)) {
+          if (data.length === 0) {
+            return `<p class="text-gray-500 italic">No rows to display.</p>`;
+          }
+
           return `<div class="overflow-x-auto">
             <table class="min-w-full border border-gray-300">
               <thead>
@@ -42,17 +51,18 @@ const App = () => {
           </div>`;
         }
 
+        // Handle non-SELECT queries (e.g., UPDATE, DELETE)
         if (message) {
           return `<p class="text-green-500">${message}</p>`;
         }
 
-        return `<p class="text-green-500">Query executed successfully.</p>`;
+        return `<p class="text-gray-500 italic">Query executed successfully.</p>`;
       } else {
         const { error } = await response.json();
         return `<p class="text-red-500">${error}</p>`;
       }
     } catch (error) {
-      console.error("Error:", error);
+      console.error("Error executing query:", error.message);
       return `<p class="text-red-500">Failed to execute query. Please try again.</p>`;
     }
   };
