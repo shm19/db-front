@@ -22,7 +22,6 @@ const App = () => {
       if (response.ok) {
         const { data, message } = await response.json();
 
-        // Handle SELECT queries (with rows)
         if (data && Array.isArray(data)) {
           if (data.length === 0) {
             return `<p class="text-gray-500 italic">No rows to display.</p>`;
@@ -50,8 +49,9 @@ const App = () => {
             </table>
           </div>`;
         }
-
-        // Handle non-SELECT queries (e.g., UPDATE, DELETE)
+        if (data.changes && data.changes > 0) {
+          return `<p class="text-green-500">${data.changes} rows affected.</p>`;
+        }
         if (message) {
           return `<p class="text-green-500">${message}</p>`;
         }
