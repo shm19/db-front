@@ -39,6 +39,13 @@ const NotebookEditor = ({ executeQuery }) => {
     });
   };
 
+  const deleteBlock = (blockId) => {
+    updateNotebook({
+      ...notebook,
+      blocks: notebook.blocks.filter((block) => block.id !== blockId),
+    });
+  };
+
   return (
     <div className="p-8">
       <div
@@ -65,12 +72,18 @@ const NotebookEditor = ({ executeQuery }) => {
         )}
       </div>
       {notebook.blocks.map((block) => (
-        <div key={block.id}>
+        <div key={block.id} className="relative">
           <Block
             block={block}
             updateBlock={(newContent, result) => updateBlock(block.id, newContent, result)}
             executeQuery={executeQuery}
           />
+          <button
+            onClick={() => deleteBlock(block.id)}
+            className="absolute top-2 right-2 bg-red-500 text-white px-2 py-1 rounded shadow hover:bg-red-700"
+          >
+            X
+          </button>
           {/* Divider */}
           <div className="opacity-0 flex justify-center z-10 w-full hover:opacity-100 duration-300 my-4">
             <div className="w-full h-px bg-gray-300"></div>

@@ -3,8 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { NotebookContext } from "../contexts/NotebookContext";
 
 const NotebooksList = () => {
-  const { notebooks, addNotebook, deleteNotebook, exportNotebooks, importNotebooks } =
-    useContext(NotebookContext);
+  const { notebooks, deleteNotebook } = useContext(NotebookContext);
 
   const navigate = useNavigate();
 
