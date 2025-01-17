@@ -5,7 +5,8 @@ import { NotebookContext } from "../contexts/NotebookContext";
 
 const Navbar = ({ onCreateNotebook, onExportAll }) => {
   const location = useLocation();
-  const { importNotebooks, notebooks } = useContext(NotebookContext);
+  const { importNotebooks, notebooks, saveDatabaseSettings, exportNotebooks } =
+    useContext(NotebookContext);
   const notebookId = location.pathname.includes("/notebook/")
     ? location.pathname.split("/")[2]
     : null;
@@ -24,6 +25,18 @@ const Navbar = ({ onCreateNotebook, onExportAll }) => {
       }
     };
     fileInput.click();
+  };
+
+  const handleExport = () => {
+    exportNotebooks();
+  };
+
+  const handleTestConnection = async (settings) => {
+    return fetch("http://localhost:8000/api/test-connection", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(settings),
+    });
   };
 
   return (
@@ -71,6 +84,12 @@ const Navbar = ({ onCreateNotebook, onExportAll }) => {
               >
                 Import Notebook
               </button>
+              <button
+                onClick={handleExport}
+                className="bg-gray-500 hover:bg-gray-700 px-4 py-2 rounded-lg shadow text-white text-sm font-semibold"
+              >
+                Export Notebook
+              </button>
             </>
           )}
         </div>
@@ -82,6 +101,8 @@ const Navbar = ({ onCreateNotebook, onExportAll }) => {
           initialSettings={
             notebooks.find((notebook) => notebook.id === notebookId)?.databaseSettings
           }
+          onTestConnection={handleTestConnection}
+          onSave={(settings) => saveDatabaseSettings(notebookId, settings)}
         />
       )}
     </nav>

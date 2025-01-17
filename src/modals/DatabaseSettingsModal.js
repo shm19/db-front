@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 
-const DatabaseSettingsModal = ({ isOpen, onClose, onSave, initialSettings }) => {
+const DatabaseSettingsModal = ({ isOpen, onClose, onSave, initialSettings, onTestConnection }) => {
   const [settings, setSettings] = useState({
-    dbType: "sqlite", // Default to SQLite
+    dbType: "sqlite",
     host: "",
     port: "",
     username: "",
@@ -10,10 +10,15 @@ const DatabaseSettingsModal = ({ isOpen, onClose, onSave, initialSettings }) => 
     connectionUrl: "",
   });
 
+  const [connectionStatus, setConnectionStatus] = useState(null);
+
   // Load initial settings (if available)
   useEffect(() => {
     if (initialSettings) {
-      setSettings(initialSettings);
+      setSettings((prev) => ({
+        ...prev,
+        ...initialSettings,
+      }));
     }
   }, [initialSettings]);
 
@@ -25,6 +30,20 @@ const DatabaseSettingsModal = ({ isOpen, onClose, onSave, initialSettings }) => 
   const handleSave = () => {
     onSave(settings);
     onClose();
+  };
+
+  const handleTestConnection = async () => {
+    try {
+      const response = await onTestConnection(settings);
+      if (response.ok) {
+        setConnectionStatus("Connection successful!");
+      } else {
+        const { error } = await response.json();
+        setConnectionStatus(`Connection failed: ${error}`);
+      }
+    } catch (error) {
+      setConnectionStatus(`Connection failed: ${error.message}`);
+    }
   };
 
   if (!isOpen) return null;
@@ -108,12 +127,31 @@ const DatabaseSettingsModal = ({ isOpen, onClose, onSave, initialSettings }) => 
               className="w-full border border-gray-300 rounded-lg p-2"
             />
           </div>
+
+          {/* Connection Status */}
+          {connectionStatus && (
+            <div
+              className={`p-2 mt-2 rounded-lg ${
+                connectionStatus.includes("successful")
+                  ? "bg-green-100 text-green-700"
+                  : "bg-red-100 text-red-700"
+              }`}
+            >
+              {connectionStatus}
+            </div>
+          )}
         </div>
 
         {/* Modal Actions */}
         <div className="flex justify-end gap-3 mt-6">
           <button onClick={onClose} className="bg-gray-500 text-white px-4 py-2 rounded-lg">
             Cancel
+          </button>
+          <button
+            onClick={handleTestConnection}
+            className="bg-blue-500 text-white px-4 py-2 rounded-lg"
+          >
+            Test Connection
           </button>
           <button onClick={handleSave} className="bg-green-500 text-white px-4 py-2 rounded-lg">
             Save

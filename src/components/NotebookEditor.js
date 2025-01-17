@@ -63,9 +63,9 @@ const NotebookEditor = ({ executeQuery }) => {
         ) : (
           <div className="mb-8 text-3xl font-bold flex items-center gap-4">
             <span>{notebook.name}</span>
-            {notebook.databaseType && (
+            {notebook?.databaseSettings?.dbType && (
               <span className="text-sm bg-gray-200 text-gray-600 px-3 py-1 rounded-full">
-                {notebook.databaseType}
+                {notebook?.databaseSettings?.dbType}
               </span>
             )}
           </div>

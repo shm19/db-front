@@ -41,7 +41,8 @@ export const NotebookProvider = ({ children }) => {
     setNotebooks((prev) => prev.filter((nb) => nb.id !== id));
   };
 
-  const setDatabaseSettings = (id, settings) => {
+  const saveDatabaseSettings = (id, settings) => {
+    console.log("Saving database settings:", settings);
     setNotebooks((prev) =>
       prev.map((notebook) =>
         notebook.id === id ? { ...notebook, databaseSettings: settings } : notebook
@@ -114,9 +115,9 @@ export const NotebookProvider = ({ children }) => {
         setNotebooks,
         addNotebook,
         deleteNotebook,
-        setDatabaseSettings,
         exportNotebooks,
         importNotebooks,
+        saveDatabaseSettings,
       }}
     >
       {children}
