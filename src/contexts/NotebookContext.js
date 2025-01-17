@@ -13,9 +13,14 @@ export const NotebookProvider = ({ children }) => {
     }
   });
 
+  // Save notebooks to localStorage without query results
   useEffect(() => {
     try {
-      localStorage.setItem("notebooks", JSON.stringify(notebooks));
+      const sanitizedNotebooks = notebooks.map((notebook) => ({
+        ...notebook,
+        blocks: notebook.blocks.map(({ result, ...block }) => block),
+      }));
+      localStorage.setItem("notebooks", JSON.stringify(sanitizedNotebooks));
     } catch (error) {
       console.error("Failed to save notebooks to localStorage:", error);
     }
@@ -27,7 +32,7 @@ export const NotebookProvider = ({ children }) => {
       name,
       createdAt: new Date().toLocaleString(),
       blocks: [],
-      databaseSettings: null, // Add database settings field
+      databaseSettings: null,
     };
     setNotebooks((prev) => [...prev, newNotebook]);
   };
@@ -45,7 +50,11 @@ export const NotebookProvider = ({ children }) => {
   };
 
   const exportNotebooks = () => {
-    const dataStr = JSON.stringify(notebooks, null, 2);
+    const sanitizedNotebooks = notebooks.map((notebook) => ({
+      ...notebook,
+      blocks: notebook.blocks.map(({ result, ...block }) => block),
+    }));
+    const dataStr = JSON.stringify(sanitizedNotebooks, null, 2);
     const blob = new Blob([dataStr], { type: "application/json" });
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
