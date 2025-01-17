@@ -76,7 +76,7 @@ const NotebookEditor = ({ executeQuery }) => {
           <Block
             block={block}
             updateBlock={(newContent, result) => updateBlock(block.id, newContent, result)}
-            executeQuery={executeQuery}
+            executeQuery={(query) => executeQuery(query, notebook.databaseSettings)}
           />
           <button
             onClick={() => deleteBlock(block.id)}
