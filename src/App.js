@@ -17,28 +17,36 @@ const App = () => {
       });
 
       if (response.ok) {
-        const { data } = await response.json();
-        return `<div class="overflow-x-auto">
-          <table class="min-w-full border border-gray-300">
-            <thead>
-              <tr class="bg-gray-100">
-                ${Object.keys(data[0] || {})
-                  .map((key) => `<th class="border px-4 py-2 text-left">${key}</th>`)
+        const { data, message } = await response.json();
+        if (Array.isArray(data)) {
+          return `<div class="overflow-x-auto">
+            <table class="min-w-full border border-gray-300">
+              <thead>
+                <tr class="bg-gray-100">
+                  ${Object.keys(data[0] || {})
+                    .map((key) => `<th class="border px-4 py-2 text-left">${key}</th>`)
+                    .join("")}
+                </tr>
+              </thead>
+              <tbody>
+                ${data
+                  .map(
+                    (row) =>
+                      `<tr>${Object.values(row)
+                        .map((value) => `<td class="border px-4 py-2">${value}</td>`)
+                        .join("")}</tr>`
+                  )
                   .join("")}
-              </tr>
-            </thead>
-            <tbody>
-              ${data
-                .map(
-                  (row) =>
-                    `<tr>${Object.values(row)
-                      .map((value) => `<td class="border px-4 py-2">${value}</td>`)
-                      .join("")}</tr>`
-                )
-                .join("")}
-            </tbody>
-          </table>
-        </div>`;
+              </tbody>
+            </table>
+          </div>`;
+        }
+
+        if (message) {
+          return `<p class="text-green-500">${message}</p>`;
+        }
+
+        return `<p class="text-green-500">Query executed successfully.</p>`;
       } else {
         const { error } = await response.json();
         return `<p class="text-red-500">${error}</p>`;
