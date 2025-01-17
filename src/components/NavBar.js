@@ -3,17 +3,14 @@ import { Link, useLocation } from "react-router-dom";
 import DatabaseSettingsModal from "../modals/DatabaseSettingsModal";
 import { NotebookContext } from "../contexts/NotebookContext";
 
-const Navbar = ({ onCreateNotebook, onSetDatabase, onExportAll, onImportAll }) => {
+const Navbar = ({ onCreateNotebook, onExportAll }) => {
   const location = useLocation();
-  const id = location.pathname.includes("/notebook/") ? location.pathname.split("/")[2] : null;
+  const { importNotebooks, notebooks } = useContext(NotebookContext);
+  const notebookId = location.pathname.includes("/notebook/")
+    ? location.pathname.split("/")[2]
+    : null;
 
-  const { notebooks } = useContext(NotebookContext);
   const [isModalOpen, setModalOpen] = useState(false);
-
-  const handleSaveSettings = (settings) => {
-    onSetDatabase(id, settings);
-    setModalOpen(false);
-  };
 
   const handleImport = () => {
     const fileInput = document.createElement("input");
@@ -22,7 +19,8 @@ const Navbar = ({ onCreateNotebook, onSetDatabase, onExportAll, onImportAll }) =
     fileInput.onchange = (e) => {
       const file = e.target.files[0];
       if (file) {
-        onImportAll(file);
+        console.log("Importing notebook:", notebookId);
+        importNotebooks(file, notebookId);
       }
     };
     fileInput.click();
@@ -36,7 +34,7 @@ const Navbar = ({ onCreateNotebook, onSetDatabase, onExportAll, onImportAll }) =
         </Link>
         <div className="flex items-center gap-4">
           {/* Notebook List Page Buttons */}
-          {!id && (
+          {!notebookId && (
             <>
               <button
                 onClick={onCreateNotebook}
@@ -59,7 +57,7 @@ const Navbar = ({ onCreateNotebook, onSetDatabase, onExportAll, onImportAll }) =
             </>
           )}
           {/* Notebook Editor Page Buttons */}
-          {id && (
+          {notebookId && (
             <>
               <button
                 onClick={() => setModalOpen(true)}
@@ -68,28 +66,22 @@ const Navbar = ({ onCreateNotebook, onSetDatabase, onExportAll, onImportAll }) =
                 Database Settings
               </button>
               <button
-                onClick={onExportAll}
-                className="bg-gray-500 hover:bg-gray-700 px-4 py-2 rounded-lg shadow text-white text-sm font-semibold"
-              >
-                Export
-              </button>
-              <button
                 onClick={handleImport}
                 className="bg-purple-500 hover:bg-purple-700 px-4 py-2 rounded-lg shadow text-white text-sm font-semibold"
               >
-                Import
+                Import Notebook
               </button>
             </>
           )}
         </div>
       </div>
-      {/* Database Settings Modal */}
-      {id && (
+      {notebookId && (
         <DatabaseSettingsModal
           isOpen={isModalOpen}
           onClose={() => setModalOpen(false)}
-          onSave={handleSaveSettings}
-          initialSettings={notebooks.find((notebook) => notebook.id === id)?.databaseSettings}
+          initialSettings={
+            notebooks.find((notebook) => notebook.id === notebookId)?.databaseSettings
+          }
         />
       )}
     </nav>

@@ -13,7 +13,7 @@ export const NotebookProvider = ({ children }) => {
     }
   });
 
-  // Save notebooks to localStorage without query results
+  // Save sanitized notebooks to localStorage
   useEffect(() => {
     try {
       const sanitizedNotebooks = notebooks.map((notebook) => ({
@@ -63,12 +63,43 @@ export const NotebookProvider = ({ children }) => {
     link.click();
   };
 
-  const importNotebooks = (file) => {
+  const importNotebooks = (file, currentNotebookId = null) => {
     const reader = new FileReader();
     reader.onload = (e) => {
       try {
-        const importedNotebooks = JSON.parse(e.target.result);
-        setNotebooks((prev) => [...prev, ...importedNotebooks]);
+        const importedData = JSON.parse(e.target.result);
+
+        // Handle replacing the current notebook
+        if (currentNotebookId) {
+          const sanitizedNotebook = {
+            ...Object.values(importedData)[0],
+            blocks: Object.values(importedData)[0].blocks.map(({ result, ...block }) => block), // Remove result
+          };
+
+          console.log("Sanitized notebook:", sanitizedNotebook);
+          setNotebooks((prev) =>
+            prev.map((notebook) =>
+              notebook.id === currentNotebookId
+                ? { ...sanitizedNotebook, id: currentNotebookId } // Retain the current notebook ID
+                : notebook
+            )
+          );
+        } else {
+          // Handle importing multiple notebooks (if importing is not replacing)
+          const sanitizedNotebooks = Array.isArray(importedData)
+            ? importedData.map((notebook) => ({
+                ...notebook,
+                blocks: notebook.blocks.map(({ result, ...block }) => block),
+              }))
+            : [
+                {
+                  ...importedData,
+                  blocks: importedData.blocks.map(({ result, ...block }) => block),
+                },
+              ];
+
+          setNotebooks((prev) => [...prev, ...sanitizedNotebooks]);
+        }
       } catch (error) {
         console.error("Invalid file format:", error);
       }
