@@ -2,12 +2,14 @@ import React, { useState, useContext } from "react";
 import { useParams } from "react-router-dom";
 import Block from "./Block";
 import { NotebookContext } from "../contexts/NotebookContext";
+import DatabaseSchema from "./DatabaseSchema";
 
 const NotebookEditor = ({ executeQuery }) => {
   const { notebooks, setNotebooks } = useContext(NotebookContext);
   const { id } = useParams();
   const notebook = notebooks.find((nb) => nb.id === id);
   const [isEditing, setIsEditing] = useState(false);
+  const [reRender, setReRender] = useState(false);
 
   if (!notebook) {
     return <div className="p-8 text-xl">Notebook not found!</div>;
@@ -29,7 +31,6 @@ const NotebookEditor = ({ executeQuery }) => {
       blocks: [...notebook.blocks, newBlock],
     });
   };
-
   const updateBlock = (blockId, newContent, result = "") => {
     updateNotebook({
       ...notebook,
@@ -44,6 +45,11 @@ const NotebookEditor = ({ executeQuery }) => {
       ...notebook,
       blocks: notebook.blocks.filter((block) => block.id !== blockId),
     });
+  };
+
+  const isSchemaChangingQuery = (query) => {
+    const schemaKeywords = ["CREATE TABLE", "DROP TABLE", "ALTER TABLE"];
+    return schemaKeywords.some((keyword) => query.toUpperCase().includes(keyword));
   };
 
   return (
@@ -71,12 +77,20 @@ const NotebookEditor = ({ executeQuery }) => {
           </div>
         )}
       </div>
+      <DatabaseSchema databaseSettings={notebook.databaseSettings} reRender={reRender} />
       {notebook.blocks.map((block) => (
         <div key={block.id} className="relative">
           <Block
             block={block}
             updateBlock={(newContent, result) => updateBlock(block.id, newContent, result)}
-            executeQuery={(query) => executeQuery(query, notebook.databaseSettings)}
+            executeQuery={(query) => {
+              const result = executeQuery(query, notebook.databaseSettings);
+              if (isSchemaChangingQuery(query)) {
+                console.log("schema changing query", query);
+                setReRender((prev) => !prev);
+              }
+              return result;
+            }}
           />
           <button
             onClick={() => deleteBlock(block.id)}
@@ -84,13 +98,11 @@ const NotebookEditor = ({ executeQuery }) => {
           >
             X
           </button>
-          {/* Divider */}
           <div className="opacity-0 flex justify-center z-10 w-full hover:opacity-100 duration-300 my-4">
             <div className="w-full h-px bg-gray-300"></div>
           </div>
         </div>
       ))}
-      {/* Add Block Buttons */}
       <div className="flex gap-4 mt-8">
         <button
           onClick={() => addBlock("markdown")}
