@@ -83,6 +83,7 @@ const App = () => {
           onExportAll={handleExportAll}
           onImportAll={handleImportAll}
         />
+        <div className="pt-16"></div>
         <Routes>
           <Route path="/" element={<NotebooksList />} />
           <Route path="/notebook/:id" element={<NotebookEditor executeQuery={executeQuery} />} />

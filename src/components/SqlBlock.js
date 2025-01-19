@@ -5,6 +5,7 @@ import { sql } from "@codemirror/lang-sql";
 const SqlBlock = ({ block, updateBlock, executeQuery, databaseType }) => {
   const [showResult, setShowResult] = useState(false);
   const [leftPanelWidth, setLeftPanelWidth] = useState(50);
+  const [blockHeight, setBlockHeight] = useState(200); // Height in pixels
   const containerRef = useRef(null);
   const isNonSQL = !["postgres", "mysql", "sqlite"].includes(databaseType);
 
@@ -14,7 +15,7 @@ const SqlBlock = ({ block, updateBlock, executeQuery, databaseType }) => {
     setShowResult(true);
   };
 
-  const handleMouseDown = (e) => {
+  const handleMouseDownHorizontal = (e) => {
     const containerWidth = containerRef.current.offsetWidth;
     const startX = e.clientX;
 
@@ -36,6 +37,24 @@ const SqlBlock = ({ block, updateBlock, executeQuery, databaseType }) => {
     window.addEventListener("mouseup", handleMouseUp);
   };
 
+  const handleMouseDownVertical = (e) => {
+    const startY = e.clientY;
+
+    const handleMouseMove = (moveEvent) => {
+      const deltaY = moveEvent.clientY - startY;
+      const newBlockHeight = Math.max(blockHeight + deltaY, 100); // Minimum height of 100px
+      setBlockHeight(newBlockHeight);
+    };
+
+    const handleMouseUp = () => {
+      window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("mouseup", handleMouseUp);
+    };
+
+    window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener("mouseup", handleMouseUp);
+  };
+
   const renderResult = (result) => {
     switch (result.type) {
       case "string":
@@ -44,7 +63,6 @@ const SqlBlock = ({ block, updateBlock, executeQuery, databaseType }) => {
             {result.content}
           </pre>
         );
-
       case "array":
         return (
           <div className="grid grid-cols-1 gap-4">
@@ -58,14 +76,12 @@ const SqlBlock = ({ block, updateBlock, executeQuery, databaseType }) => {
             ))}
           </div>
         );
-
       case "object":
         return (
           <pre className="bg-gray-100 text-gray-800 p-4 rounded whitespace-pre-wrap">
             {JSON.stringify(result.content, null, 2)}
           </pre>
         );
-
       case "table":
         if (result.content.length === 0) {
           return <p className="text-gray-500 italic">No rows to display.</p>;
@@ -94,52 +110,61 @@ const SqlBlock = ({ block, updateBlock, executeQuery, databaseType }) => {
             </tbody>
           </table>
         );
-
       case "message":
         return <p className="text-green-500">{result.content}</p>;
-
       case "error":
         return <p className="text-red-500">{result.content}</p>;
-
       default:
         return <p className="text-gray-500 italic">Unknown result type.</p>;
     }
   };
 
   return (
-    <div ref={containerRef} className="flex h-40 border rounded-md shadow-md relative">
+    <div
+      ref={containerRef}
+      className="flex flex-col border rounded-md shadow-md relative"
+      style={{ height: `${blockHeight}px` }}
+    >
       {/* SQL Editor Panel */}
-      <div className="relative bg-gray-900 border-r" style={{ width: `${leftPanelWidth}%` }}>
-        <CodeMirror
-          value={block.content}
-          extensions={isNonSQL ? [] : [sql()]}
-          onChange={(value) => updateBlock(value)}
-          theme="dark"
-          placeholder={`Write your ${databaseType} query here...`}
-          className="w-full h-full"
-        />
-        <button
-          onClick={runCode}
-          className="absolute bottom-2 right-2 bg-blue-500 hover:bg-blue-700 text-white w-8 h-8 rounded-full flex items-center justify-center shadow-md"
-        >
-          ▶
-        </button>
+      <div className="flex h-full">
+        <div className="relative bg-gray-900 border-r" style={{ width: `${leftPanelWidth}%` }}>
+          <CodeMirror
+            value={block.content}
+            extensions={isNonSQL ? [] : [sql()]}
+            onChange={(value) => updateBlock(value)}
+            theme="dark"
+            placeholder={`Write your ${databaseType} query here...`}
+            className="w-full h-full"
+          />
+          <button
+            onClick={runCode}
+            className="absolute bottom-2 right-2 bg-blue-500 hover:bg-blue-700 text-white w-8 h-8 rounded-full flex items-center justify-center shadow-md"
+          >
+            ▶
+          </button>
+        </div>
+
+        {/* Resizable Separator (Horizontal) */}
+        <div
+          className="separator h-full w-2 bg-gray-400 cursor-col-resize"
+          onMouseDown={handleMouseDownHorizontal}
+        ></div>
+
+        {/* Results Panel */}
+        <div className="flex-grow bg-gray-50 p-4 overflow-y-auto">
+          {showResult ? (
+            renderResult(block.result)
+          ) : (
+            <p className="text-gray-400 text-sm">Click the play button to run this cell</p>
+          )}
+        </div>
       </div>
 
-      {/* Resizable Separator */}
+      {/* Resizable Separator (Vertical) */}
       <div
-        className="separator h-full w-2 bg-gray-400 cursor-col-resize"
-        onMouseDown={handleMouseDown}
+        className="separator w-full h-2 bg-gray-400 cursor-row-resize"
+        onMouseDown={handleMouseDownVertical}
       ></div>
-
-      {/* Results Panel */}
-      <div className="flex-grow bg-gray-50 p-4 overflow-y-auto">
-        {showResult ? (
-          renderResult(block.result)
-        ) : (
-          <p className="text-gray-400 text-sm">Click the play button to run this cell</p>
-        )}
-      </div>
     </div>
   );
 };

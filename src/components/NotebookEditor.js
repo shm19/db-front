@@ -69,8 +69,8 @@ const NotebookEditor = ({ executeQuery }) => {
             className="w-full p-2 outline-none border border-gray-300 rounded-md"
           />
         ) : (
-          <div className="flex items-center justify-between">
-            <h1 className="text-3xl font-bold">{notebook.name}</h1>
+          <div className="flex items-center">
+            <h1 className="p-4 text-3xl font-bold">{notebook.name}</h1>
             {notebook?.databaseSettings?.dbType && (
               <span className="text-sm bg-gray-200 text-gray-600 px-3 py-1 rounded-full">
                 {notebook?.databaseSettings?.dbType}
@@ -105,10 +105,10 @@ const NotebookEditor = ({ executeQuery }) => {
             {/* Delete Button */}
             <button
               onClick={() => deleteBlock(block.id)}
-              className="absolute top-2 right-2 bg-red-500 text-white px-3 py-1 rounded shadow hover:bg-red-600 transition-transform transform hover:scale-105"
+              className="absolute top-2 right-2 bg-red-500 text-white px-3 py-1 rounded-full shadow hover:bg-red-600 transition-transform transform hover:scale-105 font-bold"
               title="Delete Block"
             >
-              ✖
+              X
             </button>
           </div>
         ))}
@@ -124,7 +124,7 @@ const NotebookEditor = ({ executeQuery }) => {
         </button>
         <button
           onClick={() => addBlock("code")}
-          className="flex-1 bg-gray-500 text-white px-6 py-3 rounded shadow-md hover:bg-gray-600 transition-all"
+          className="flex-1 bg-blue-500 text-white px-6 py-3 rounded shadow-md hover:bg-blue-600 transition-all"
         >
           + Add SQL Block
         </button>
