@@ -25,6 +25,9 @@ const App = () => {
         const { data, message } = await response.json();
 
         if (isNonSQL) {
+          if (typeof data === "string") {
+            return `<pre class="bg-gray-900 text-white p-4 rounded">${data}</pre>`;
+          }
           return `<pre class="bg-gray-900 text-white p-4 rounded">${JSON.stringify(
             data,
             null,

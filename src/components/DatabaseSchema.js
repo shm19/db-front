@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { isNoSql } from "../utils/isNoSql";
 
 const fetchDatabaseSchema = async (databaseSettings) => {
   try {
@@ -69,46 +70,49 @@ const DatabaseSchema = ({ databaseSettings, reRender }) => {
     return null;
   }
 
+  if (Object.keys(schema).length === 0) {
+    return (
+      <div className="mb-8 bg-gray-50 p-6 rounded shadow">
+        <p className="text-gray-500 italic">No tables or collections found in the database.</p>
+      </div>
+    );
+  }
+
   return (
     <div className="mb-8 bg-gray-50 p-6 rounded shadow">
       <h2 className="text-lg font-bold mb-4">Database Schema</h2>
-      {Object.keys(schema).length === 0 ? (
-        <p className="text-gray-500 italic">No tables found in the database.</p>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {Object.entries(schema).map(([tableName, columns]) => (
-            <div
-              key={tableName}
-              className="bg-white shadow-md border border-gray-200 rounded-lg p-4"
-            >
-              <h3 className="text-md font-semibold mb-2">{tableName}</h3>
-              {columns.length > 0 && (
-                <table className="w-full text-sm text-left text-gray-600">
-                  <thead>
-                    <tr className="bg-gray-100 border-b">
-                      <th className="px-2 py-1 font-medium">Column</th>
-                      <th className="px-2 py-1 font-medium">Type</th>
-                      <th className="px-2 py-1 font-medium">Constraints</th>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {Object.entries(schema).map(([key, value]) => (
+          <div key={key} className="bg-white shadow-md border border-gray-200 rounded-lg p-4">
+            <h3 className="text-md font-semibold mb-2">{key}</h3>
+            {Array.isArray(value) && !isNoSql(databaseSettings.dbType) ? (
+              <table className="w-full text-sm text-left text-gray-600">
+                <thead>
+                  <tr className="bg-gray-100 border-b">
+                    <th className="px-2 py-1 font-medium">Column</th>
+                    <th className="px-2 py-1 font-medium">Type</th>
+                    <th className="px-2 py-1 font-medium">Constraints</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {value.map((col, index) => (
+                    <tr key={index} className="border-b">
+                      <td className="px-2 py-1">{col.name}</td>
+                      <td className="px-2 py-1">{col.type}</td>
+                      <td className="px-2 py-1">
+                        {col.notnull ? "NOT NULL" : ""}
+                        {col.defaultValue !== null ? ` DEFAULT ${col.defaultValue}` : ""}
+                      </td>
                     </tr>
-                  </thead>
-                  <tbody>
-                    {columns.map((col, index) => (
-                      <tr key={index} className="border-b">
-                        <td className="px-2 py-1">{col.name}</td>
-                        <td className="px-2 py-1">{col.type}</td>
-                        <td className="px-2 py-1">
-                          {col.notnull ? "NOT NULL" : ""}
-                          {col.defaultValue !== null ? ` DEFAULT ${col.defaultValue}` : ""}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              )}
-            </div>
-          ))}
-        </div>
-      )}
+                  ))}
+                </tbody>
+              </table>
+            ) : (
+              value && <p className="text-gray-500 italic">{JSON.stringify(value)}</p>
+            )}
+          </div>
+        ))}
+      </div>
     </div>
   );
 };

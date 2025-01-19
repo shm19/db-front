@@ -66,6 +66,7 @@ const DatabaseSettingsModal = ({ isOpen, onClose, onSave, initialSettings, onTes
               <option value="mysql">MySQL</option>
               <option value="postgres">PostgreSQL</option>
               <option value="mongodb">Mongodb</option>
+              <option value="redis">Redis</option>
             </select>
           </div>
 
