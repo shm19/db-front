@@ -1,7 +1,8 @@
-import React, { useContext, useState } from "react";
+import React, { useState, useContext } from "react";
 import { Link, useLocation } from "react-router-dom";
-import DatabaseSettingsModal from "../modals/DatabaseSettingsModal";
 import { NotebookContext } from "../contexts/NotebookContext";
+import { FaSun, FaMoon } from "react-icons/fa";
+import DatabaseSettingsModal from "../modals/DatabaseSettingsModal";
 
 const Navbar = ({ onCreateNotebook, onExportAll }) => {
   const location = useLocation();
@@ -13,6 +14,12 @@ const Navbar = ({ onCreateNotebook, onExportAll }) => {
 
   const [isModalOpen, setModalOpen] = useState(false);
   const [isMenuOpen, setMenuOpen] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(false); // Manage dark mode state
+
+  const handleDarkModeToggle = () => {
+    setIsDarkMode(!isDarkMode);
+    document.documentElement.classList.toggle("dark", !isDarkMode); // Toggle dark mode class on <html>
+  };
 
   const handleImport = () => {
     const fileInput = document.createElement("input");
@@ -40,7 +47,7 @@ const Navbar = ({ onCreateNotebook, onExportAll }) => {
   };
 
   return (
-    <nav className="bg-blue-600 text-white fixed w-full z-10 shadow-md">
+    <nav className="bg-blue-600 text-white fixed w-full z-10 shadow-md dark:bg-blue-800 dark:text-gray-100">
       <div className="container mx-auto px-4 flex justify-between items-center py-3">
         {/* Logo */}
         <Link to="/" className="text-2xl font-bold hover:text-gray-300 transition">
@@ -92,6 +99,18 @@ const Navbar = ({ onCreateNotebook, onExportAll }) => {
               </button>
             </>
           )}
+
+          {/* Dark Mode Toggle */}
+          <button
+            onClick={handleDarkModeToggle}
+            className="p-2 rounded-full bg-gray-700 hover:bg-gray-800"
+          >
+            {isDarkMode ? (
+              <FaSun className="text-yellow-400" />
+            ) : (
+              <FaMoon className="text-blue-300" />
+            )}
+          </button>
         </div>
 
         {/* Mobile Menu Button */}
@@ -150,6 +169,18 @@ const Navbar = ({ onCreateNotebook, onExportAll }) => {
                 </button>
               </>
             )}
+
+            {/* Dark Mode Toggle in Mobile Menu */}
+            <button
+              onClick={handleDarkModeToggle}
+              className="p-2 rounded-full bg-gray-700 hover:bg-gray-800 mx-auto"
+            >
+              {isDarkMode ? (
+                <FaSun className="text-yellow-400" />
+              ) : (
+                <FaMoon className="text-blue-300" />
+              )}
+            </button>
           </div>
         </div>
       )}
