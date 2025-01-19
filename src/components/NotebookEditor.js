@@ -82,6 +82,7 @@ const NotebookEditor = ({ executeQuery }) => {
         <div key={block.id} className="relative">
           <Block
             block={block}
+            databaseType={notebook.databaseSettings.dbType}
             updateBlock={(newContent, result) => updateBlock(block.id, newContent, result)}
             executeQuery={(query) => {
               const result = executeQuery(query, notebook.databaseSettings);

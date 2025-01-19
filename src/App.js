@@ -9,6 +9,8 @@ const App = () => {
   const { addNotebook, exportNotebooks, importNotebooks } = useContext(NotebookContext);
 
   const executeQuery = async (query, databaseSettings) => {
+    const isNonSQL = !["postgres", "mysql", "sqlite"].includes(databaseSettings.dbType);
+
     try {
       const response = await fetch("http://localhost:8000/api/execute-query", {
         method: "POST",
@@ -21,6 +23,14 @@ const App = () => {
 
       if (response.ok) {
         const { data, message } = await response.json();
+
+        if (isNonSQL) {
+          return `<pre class="bg-gray-900 text-white p-4 rounded">${JSON.stringify(
+            data,
+            null,
+            2
+          )}</pre>`;
+        }
 
         if (data && Array.isArray(data)) {
           if (data.length === 0) {

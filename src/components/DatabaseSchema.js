@@ -82,27 +82,29 @@ const DatabaseSchema = ({ databaseSettings, reRender }) => {
               className="bg-white shadow-md border border-gray-200 rounded-lg p-4"
             >
               <h3 className="text-md font-semibold mb-2">{tableName}</h3>
-              <table className="w-full text-sm text-left text-gray-600">
-                <thead>
-                  <tr className="bg-gray-100 border-b">
-                    <th className="px-2 py-1 font-medium">Column</th>
-                    <th className="px-2 py-1 font-medium">Type</th>
-                    <th className="px-2 py-1 font-medium">Constraints</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {columns.map((col, index) => (
-                    <tr key={index} className="border-b">
-                      <td className="px-2 py-1">{col.name}</td>
-                      <td className="px-2 py-1">{col.type}</td>
-                      <td className="px-2 py-1">
-                        {col.notnull ? "NOT NULL" : ""}
-                        {col.defaultValue !== null ? ` DEFAULT ${col.defaultValue}` : ""}
-                      </td>
+              {columns.length > 0 && (
+                <table className="w-full text-sm text-left text-gray-600">
+                  <thead>
+                    <tr className="bg-gray-100 border-b">
+                      <th className="px-2 py-1 font-medium">Column</th>
+                      <th className="px-2 py-1 font-medium">Type</th>
+                      <th className="px-2 py-1 font-medium">Constraints</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {columns.map((col, index) => (
+                      <tr key={index} className="border-b">
+                        <td className="px-2 py-1">{col.name}</td>
+                        <td className="px-2 py-1">{col.type}</td>
+                        <td className="px-2 py-1">
+                          {col.notnull ? "NOT NULL" : ""}
+                          {col.defaultValue !== null ? ` DEFAULT ${col.defaultValue}` : ""}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              )}
             </div>
           ))}
         </div>

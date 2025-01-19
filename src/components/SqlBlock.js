@@ -2,11 +2,11 @@ import React, { useState, useRef } from "react";
 import CodeMirror from "@uiw/react-codemirror";
 import { sql } from "@codemirror/lang-sql";
 
-const SqlBlock = ({ block, updateBlock, executeQuery }) => {
+const SqlBlock = ({ block, updateBlock, executeQuery, databaseType }) => {
   const [showResult, setShowResult] = useState(false);
-  const [leftPanelWidth, setLeftPanelWidth] = useState(50); // Percentage width for the left panel
+  const [leftPanelWidth, setLeftPanelWidth] = useState(50);
   const containerRef = useRef(null);
-
+  const isNonSQL = !["postgres", "mysql", "sqlite"].includes(databaseType);
   const runCode = async () => {
     const queryResult = await executeQuery(block.content);
     updateBlock(block.content, queryResult);
@@ -23,7 +23,7 @@ const SqlBlock = ({ block, updateBlock, executeQuery }) => {
         Math.max(((leftPanelWidth / 100) * containerWidth + deltaX) / containerWidth, 0.1),
         0.9
       );
-      setLeftPanelWidth(newLeftPanelWidth * 100); // Convert back to percentage
+      setLeftPanelWidth(newLeftPanelWidth * 100);
     };
 
     const handleMouseUp = () => {
@@ -41,10 +41,10 @@ const SqlBlock = ({ block, updateBlock, executeQuery }) => {
       <div className="relative bg-gray-900 border-r" style={{ width: `${leftPanelWidth}%` }}>
         <CodeMirror
           value={block.content}
-          extensions={[sql()]}
+          extensions={isNonSQL ? [] : [sql()]}
           onChange={(value) => updateBlock(value)}
           theme="dark"
-          placeholder="Write your SQL query here..."
+          placeholder={`Write your ${databaseType} query here...`}
           className="w-full h-full"
         />
         <button
