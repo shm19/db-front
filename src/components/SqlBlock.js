@@ -69,7 +69,7 @@ const SqlBlock = ({ block, updateBlock, executeQuery, databaseType }) => {
             {result.content.map((item, index) => (
               <pre
                 key={index}
-                className="bg-gray-100 text-gray-800 p-4 rounded whitespace-pre-wrap"
+                className="bg-gray-100 text-gray-800 p-4 rounded whitespace-pre-wrap dark:bg-gray-700 dark:text-white"
               >
                 {JSON.stringify(item, null, 2)}
               </pre>
@@ -78,20 +78,20 @@ const SqlBlock = ({ block, updateBlock, executeQuery, databaseType }) => {
         );
       case "object":
         return (
-          <pre className="bg-gray-100 text-gray-800 p-4 rounded whitespace-pre-wrap">
+          <pre className="bg-gray-100 text-gray-800 p-4 rounded whitespace-pre-wrap dark:bg-gray-700 dark:text-white">
             {JSON.stringify(result.content, null, 2)}
           </pre>
         );
       case "table":
         if (result.content.length === 0) {
-          return <p className="text-gray-500 italic">No rows to display.</p>;
+          return <p className="text-gray-500 italic dark:text-gray-400">No rows to display.</p>;
         }
         return (
-          <table className="min-w-full border border-gray-300">
+          <table className="min-w-full border border-gray-300 dark:border-gray-600">
             <thead>
-              <tr className="bg-gray-100">
+              <tr className="bg-gray-100 dark:bg-gray-700">
                 {Object.keys(result.content[0]).map((key) => (
-                  <th key={key} className="border px-4 py-2 text-left">
+                  <th key={key} className="border px-4 py-2 text-left dark:text-white">
                     {key}
                   </th>
                 ))}
@@ -99,9 +99,9 @@ const SqlBlock = ({ block, updateBlock, executeQuery, databaseType }) => {
             </thead>
             <tbody>
               {result.content.map((row, rowIndex) => (
-                <tr key={rowIndex}>
+                <tr key={rowIndex} className="dark:bg-gray-800">
                   {Object.values(row).map((value, colIndex) => (
-                    <td key={colIndex} className="border px-4 py-2">
+                    <td key={colIndex} className="border px-4 py-2 dark:text-white">
                       {value}
                     </td>
                   ))}
@@ -111,23 +111,26 @@ const SqlBlock = ({ block, updateBlock, executeQuery, databaseType }) => {
           </table>
         );
       case "message":
-        return <p className="text-green-500">{result.content}</p>;
+        return <p className="text-green-500 dark:text-green-400">{result.content}</p>;
       case "error":
-        return <p className="text-red-500">{result.content}</p>;
+        return <p className="text-red-500 dark:text-red-400">{result.content}</p>;
       default:
-        return <p className="text-gray-500 italic">Unknown result type.</p>;
+        return <p className="text-gray-500 italic dark:text-gray-400">Unknown result type.</p>;
     }
   };
 
   return (
     <div
       ref={containerRef}
-      className="flex flex-col border rounded-md shadow-md relative"
+      className="flex flex-col border rounded-md shadow-md relative dark:bg-gray-800 dark:border-gray-600"
       style={{ height: `${blockHeight}px` }}
     >
       {/* SQL Editor Panel */}
       <div className="flex h-full">
-        <div className="relative bg-gray-900 border-r" style={{ width: `${leftPanelWidth}%` }}>
+        <div
+          className="relative bg-gray-900 dark:bg-gray-700 border-r"
+          style={{ width: `${leftPanelWidth}%` }}
+        >
           <CodeMirror
             value={block.content}
             extensions={isNonSQL ? [] : [sql()]}
@@ -138,7 +141,7 @@ const SqlBlock = ({ block, updateBlock, executeQuery, databaseType }) => {
           />
           <button
             onClick={runCode}
-            className="absolute bottom-2 right-2 bg-blue-500 hover:bg-blue-700 text-white w-8 h-8 rounded-full flex items-center justify-center shadow-md"
+            className="absolute bottom-2 right-2 bg-blue-500 hover:bg-blue-700 text-white w-8 h-8 rounded-full flex items-center justify-center shadow-md dark:bg-blue-600 dark:hover:bg-blue-500"
           >
             ▶
           </button>
@@ -146,23 +149,25 @@ const SqlBlock = ({ block, updateBlock, executeQuery, databaseType }) => {
 
         {/* Resizable Separator (Horizontal) */}
         <div
-          className="separator h-full w-2 bg-gray-400 cursor-col-resize"
+          className="separator h-full w-2 bg-gray-400 cursor-col-resize dark:bg-gray-600"
           onMouseDown={handleMouseDownHorizontal}
         ></div>
 
         {/* Results Panel */}
-        <div className="flex-grow bg-gray-50 p-4 overflow-y-auto">
+        <div className="flex-grow bg-gray-50 p-4 overflow-y-auto dark:bg-gray-900 dark:text-white">
           {showResult ? (
             renderResult(block.result)
           ) : (
-            <p className="text-gray-400 text-sm">Click the play button to run this cell</p>
+            <p className="text-gray-400 text-sm dark:text-gray-400">
+              Click the play button to run this cell
+            </p>
           )}
         </div>
       </div>
 
       {/* Resizable Separator (Vertical) */}
       <div
-        className="separator w-full h-2 bg-gray-400 cursor-row-resize"
+        className="separator w-full h-2 bg-gray-400 cursor-row-resize dark:bg-gray-600"
         onMouseDown={handleMouseDownVertical}
       ></div>
     </div>

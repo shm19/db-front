@@ -54,10 +54,10 @@ const NotebookEditor = ({ executeQuery }) => {
   };
 
   return (
-    <div className="p-8 bg-gray-50 min-h-screen">
+    <div className="p-8 bg-gray-50 dark:bg-gray-900 min-h-screen">
       {/* Notebook Header */}
       <div
-        className="mb-8 border-b-2 border-gray-300 bg-white shadow-md rounded-md cursor-pointer hover:bg-gray-100"
+        className="mb-8 border-b-2 border-gray-300 bg-white shadow-md rounded-md cursor-pointer hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-100"
         onClick={() => setIsEditing(true)}
       >
         {isEditing ? (
@@ -66,13 +66,13 @@ const NotebookEditor = ({ executeQuery }) => {
             onChange={(e) => updateNotebook({ ...notebook, name: e.target.value })}
             onBlur={() => setIsEditing(false)}
             autoFocus
-            className="w-full p-2 outline-none border border-gray-300 rounded-md"
+            className="w-full p-2 outline-none border border-gray-300 rounded-md dark:bg-gray-700 dark:text-gray-100"
           />
         ) : (
           <div className="flex items-center">
             <h1 className="p-4 text-3xl font-bold">{notebook.name}</h1>
             {notebook?.databaseSettings?.dbType && (
-              <span className="text-sm bg-gray-200 text-gray-600 px-3 py-1 rounded-full">
+              <span className="text-sm bg-gray-200 text-gray-600 px-3 py-1 rounded-full dark:bg-gray-600 dark:text-gray-100">
                 {notebook?.databaseSettings?.dbType}
               </span>
             )}
@@ -88,7 +88,7 @@ const NotebookEditor = ({ executeQuery }) => {
         {notebook.blocks.map((block) => (
           <div
             key={block.id}
-            className="relative bg-white border border-gray-300 rounded-md shadow-md"
+            className="relative bg-white border border-gray-300 rounded-md shadow-md dark:bg-gray-800 dark:border-gray-600"
           >
             <Block
               block={block}
@@ -118,13 +118,13 @@ const NotebookEditor = ({ executeQuery }) => {
       <div className="flex gap-4 mt-8">
         <button
           onClick={() => addBlock("markdown")}
-          className="flex-1 bg-blue-500 text-white px-6 py-3 rounded shadow-md hover:bg-blue-600 transition-all"
+          className="flex-1 bg-blue-500 text-white px-6 py-3 rounded shadow-md hover:bg-blue-600 transition-all dark:bg-blue-700 dark:hover:bg-blue-800"
         >
           + Add Markdown Block
         </button>
         <button
           onClick={() => addBlock("code")}
-          className="flex-1 bg-blue-500 text-white px-6 py-3 rounded shadow-md hover:bg-blue-600 transition-all"
+          className="flex-1 bg-blue-500 text-white px-6 py-3 rounded shadow-md hover:bg-blue-600 transition-all dark:bg-blue-700 dark:hover:bg-blue-800"
         >
           + Add SQL Block
         </button>

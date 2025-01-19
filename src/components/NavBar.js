@@ -47,7 +47,7 @@ const Navbar = ({ onCreateNotebook, onExportAll }) => {
   };
 
   return (
-    <nav className="bg-blue-600 text-white fixed w-full z-10 shadow-md dark:bg-blue-800 dark:text-gray-100">
+    <nav className="bg-blue-600 text-white fixed w-full z-10 shadow-md dark:bg-blue-950 dark:text-gray-100">
       <div className="container mx-auto px-4 flex justify-between items-center py-3">
         {/* Logo */}
         <Link to="/" className="text-2xl font-bold hover:text-gray-300 transition">
@@ -60,19 +60,19 @@ const Navbar = ({ onCreateNotebook, onExportAll }) => {
             <>
               <button
                 onClick={onCreateNotebook}
-                className="bg-gray-700 hover:bg-gray-900 px-4 py-2 rounded-md shadow text-sm font-medium transition"
+                className="bg-gray-700 hover:bg-gray-900 px-4 py-2 rounded-md shadow text-sm font-medium transition dark:bg-gray-500 dark:hover:bg-gray-600"
               >
                 + New Notebook
               </button>
               <button
                 onClick={onExportAll}
-                className="bg-gray-700 hover:bg-gray-900 px-4 py-2 rounded-md shadow text-sm font-medium transition"
+                className="bg-gray-700 hover:bg-gray-900 px-4 py-2 rounded-md shadow text-sm font-medium transition dark:bg-gray-500 dark:hover:bg-gray-600"
               >
                 Export All
               </button>
               <button
                 onClick={handleImport}
-                className="bg-gray-700 hover:bg-gray-900 px-4 py-2 rounded-md shadow text-sm font-medium transition"
+                className="bg-gray-700 hover:bg-gray-900 px-4 py-2 rounded-md shadow text-sm font-medium transition dark:bg-gray-500 dark:hover:bg-gray-600"
               >
                 Import All
               </button>
@@ -81,19 +81,19 @@ const Navbar = ({ onCreateNotebook, onExportAll }) => {
             <>
               <button
                 onClick={() => setModalOpen(true)}
-                className="bg-gray-700 hover:bg-gray-900 px-4 py-2 rounded-md shadow text-sm font-medium transition"
+                className="bg-gray-700 hover:bg-gray-900 px-4 py-2 rounded-md shadow text-sm font-medium transition dark:bg-gray-500 dark:hover:bg-gray-600"
               >
                 Database Settings
               </button>
               <button
                 onClick={handleImport}
-                className="bg-gray-700 hover:bg-gray-900 px-4 py-2 rounded-md shadow text-sm font-medium transition"
+                className="bg-gray-700 hover:bg-gray-900 px-4 py-2 rounded-md shadow text-sm font-medium transition dark:bg-gray-500 dark:hover:bg-gray-600"
               >
                 Import Notebook
               </button>
               <button
                 onClick={handleExport}
-                className="bg-gray-700 hover:bg-gray-900 px-4 py-2 rounded-md shadow text-sm font-medium transition"
+                className="bg-gray-700 hover:bg-gray-900 px-4 py-2 rounded-md shadow text-sm font-medium transition dark:bg-gray-500 dark:hover:bg-gray-600"
               >
                 Export Notebook
               </button>
@@ -103,7 +103,7 @@ const Navbar = ({ onCreateNotebook, onExportAll }) => {
           {/* Dark Mode Toggle */}
           <button
             onClick={handleDarkModeToggle}
-            className="p-2 rounded-full bg-gray-700 hover:bg-gray-800"
+            className="p-2 rounded-full bg-gray-700 hover:bg-gray-800 dark:bg-gray-500 dark:hover:bg-gray-600"
           >
             {isDarkMode ? (
               <FaSun className="text-yellow-400" />
@@ -116,7 +116,7 @@ const Navbar = ({ onCreateNotebook, onExportAll }) => {
         {/* Mobile Menu Button */}
         <button
           onClick={() => setMenuOpen(!isMenuOpen)}
-          className="md:hidden bg-gray-700 hover:bg-gray-900 px-4 py-2 rounded-md shadow text-sm font-medium transition"
+          className="md:hidden bg-gray-700 hover:bg-gray-900 px-4 py-2 rounded-md shadow text-sm font-medium transition dark:bg-gray-500 dark:hover:bg-gray-600"
         >
           Menu
         </button>
@@ -130,19 +130,19 @@ const Navbar = ({ onCreateNotebook, onExportAll }) => {
               <>
                 <button
                   onClick={onCreateNotebook}
-                  className="bg-gray-700 hover:bg-gray-900 px-4 py-2 rounded-md shadow text-sm font-medium transition"
+                  className="bg-gray-700 hover:bg-gray-900 px-4 py-2 rounded-md shadow text-sm font-medium transition dark:bg-gray-500 dark:hover:bg-gray-600"
                 >
                   + New Notebook
                 </button>
                 <button
                   onClick={onExportAll}
-                  className="bg-gray-700 hover:bg-gray-900 px-4 py-2 rounded-md shadow text-sm font-medium transition"
+                  className="bg-gray-700 hover:bg-gray-900 px-4 py-2 rounded-md shadow text-sm font-medium transition dark:bg-gray-500 dark:hover:bg-gray-600"
                 >
                   Export All
                 </button>
                 <button
                   onClick={handleImport}
-                  className="bg-gray-700 hover:bg-gray-900 px-4 py-2 rounded-md shadow text-sm font-medium transition"
+                  className="bg-gray-700 hover:bg-gray-900 px-4 py-2 rounded-md shadow text-sm font-medium transition dark:bg-gray-500 dark:hover:bg-gray-600"
                 >
                   Import All
                 </button>
@@ -151,19 +151,19 @@ const Navbar = ({ onCreateNotebook, onExportAll }) => {
               <>
                 <button
                   onClick={() => setModalOpen(true)}
-                  className="bg-gray-700 hover:bg-gray-900 px-4 py-2 rounded-md shadow text-sm font-medium transition"
+                  className="bg-gray-700 hover:bg-gray-900 px-4 py-2 rounded-md shadow text-sm font-medium transition dark:bg-gray-500 dark:hover:bg-gray-600"
                 >
                   Database Settings
                 </button>
                 <button
                   onClick={handleImport}
-                  className="bg-gray-700 hover:bg-gray-900 px-4 py-2 rounded-md shadow text-sm font-medium transition"
+                  className="bg-gray-700 hover:bg-gray-900 px-4 py-2 rounded-md shadow text-sm font-medium transition dark:bg-gray-500 dark:hover:bg-gray-600"
                 >
                   Import Notebook
                 </button>
                 <button
                   onClick={handleExport}
-                  className="bg-gray-700 hover:bg-gray-900 px-4 py-2 rounded-md shadow text-sm font-medium transition"
+                  className="bg-gray-700 hover:bg-gray-900 px-4 py-2 rounded-md shadow text-sm font-medium transition dark:bg-gray-500 dark:hover:bg-gray-600"
                 >
                   Export Notebook
                 </button>
@@ -173,7 +173,7 @@ const Navbar = ({ onCreateNotebook, onExportAll }) => {
             {/* Dark Mode Toggle in Mobile Menu */}
             <button
               onClick={handleDarkModeToggle}
-              className="p-2 rounded-full bg-gray-700 hover:bg-gray-800 mx-auto"
+              className="p-2 rounded-full bg-gray-700 hover:bg-gray-800 mx-auto dark:bg-gray-500 dark:hover:bg-gray-600"
             >
               {isDarkMode ? (
                 <FaSun className="text-yellow-400" />

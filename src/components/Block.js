@@ -5,7 +5,7 @@ import SqlBlock from "./SqlBlock";
 
 const Block = ({ block, updateBlock, executeQuery, databaseType }) => {
   return (
-    <div>
+    <div className="bg-white border border-gray-300 rounded-md shadow-md dark:bg-gray-800 dark:border-gray-600">
       {block.type === "code" && (
         <SqlBlock
           block={block}

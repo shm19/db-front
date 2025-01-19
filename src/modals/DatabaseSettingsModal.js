@@ -50,7 +50,7 @@ const DatabaseSettingsModal = ({ isOpen, onClose, onSave, initialSettings, onTes
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-      <div className="bg-white text-black rounded-lg p-6 shadow-lg w-3/4 max-w-lg">
+      <div className="bg-white dark:bg-gray-800 text-black dark:text-white rounded-lg p-6 shadow-lg w-3/4 max-w-lg">
         <h1 className="text-2xl mb-4 font-bold">Connection Settings</h1>
         <div className="flex flex-col gap-4">
           {/* Database Type */}
@@ -60,12 +60,12 @@ const DatabaseSettingsModal = ({ isOpen, onClose, onSave, initialSettings, onTes
               name="dbType"
               value={settings.dbType}
               onChange={handleInputChange}
-              className="w-full border border-gray-300 rounded-lg p-2 bg-white"
+              className="w-full border border-gray-300 dark:border-gray-700 rounded-lg p-2 bg-white dark:bg-gray-700 dark:text-white"
             >
               <option value="sqlite">SQLite</option>
               <option value="mysql">MySQL</option>
               <option value="postgres">PostgreSQL</option>
-              <option value="mongodb">Mongodb</option>
+              <option value="mongodb">MongoDB</option>
               <option value="redis">Redis</option>
             </select>
           </div>
@@ -79,7 +79,7 @@ const DatabaseSettingsModal = ({ isOpen, onClose, onSave, initialSettings, onTes
                 name="host"
                 value={settings.host}
                 onChange={handleInputChange}
-                className="w-full border border-gray-300 rounded-lg p-2"
+                className="w-full border border-gray-300 dark:border-gray-700 rounded-lg p-2 bg-white dark:bg-gray-700 dark:text-white"
               />
             </div>
             <div className="w-1/2">
@@ -89,7 +89,7 @@ const DatabaseSettingsModal = ({ isOpen, onClose, onSave, initialSettings, onTes
                 name="port"
                 value={settings.port}
                 onChange={handleInputChange}
-                className="w-full border border-gray-300 rounded-lg p-2"
+                className="w-full border border-gray-300 dark:border-gray-700 rounded-lg p-2 bg-white dark:bg-gray-700 dark:text-white"
               />
             </div>
           </div>
@@ -103,7 +103,7 @@ const DatabaseSettingsModal = ({ isOpen, onClose, onSave, initialSettings, onTes
                 name="username"
                 value={settings.username}
                 onChange={handleInputChange}
-                className="w-full border border-gray-300 rounded-lg p-2"
+                className="w-full border border-gray-300 dark:border-gray-700 rounded-lg p-2 bg-white dark:bg-gray-700 dark:text-white"
               />
             </div>
             <div className="w-1/2">
@@ -113,7 +113,7 @@ const DatabaseSettingsModal = ({ isOpen, onClose, onSave, initialSettings, onTes
                 name="password"
                 value={settings.password}
                 onChange={handleInputChange}
-                className="w-full border border-gray-300 rounded-lg p-2"
+                className="w-full border border-gray-300 dark:border-gray-700 rounded-lg p-2 bg-white dark:bg-gray-700 dark:text-white"
               />
             </div>
           </div>
@@ -126,7 +126,7 @@ const DatabaseSettingsModal = ({ isOpen, onClose, onSave, initialSettings, onTes
               name="connectionUrl"
               value={settings.connectionUrl}
               onChange={handleInputChange}
-              className="w-full border border-gray-300 rounded-lg p-2"
+              className="w-full border border-gray-300 dark:border-gray-700 rounded-lg p-2 bg-white dark:bg-gray-700 dark:text-white"
             />
           </div>
 

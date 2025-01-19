@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Navbar from "./components/NavBar";
 import NotebooksList from "./components/NotebooksList";
@@ -7,6 +7,7 @@ import { NotebookContext } from "./contexts/NotebookContext";
 
 const App = () => {
   const { addNotebook, exportNotebooks, importNotebooks } = useContext(NotebookContext);
+  const [isDarkMode, setIsDarkMode] = useState(false);
 
   const executeQuery = async (query, databaseSettings) => {
     const isNonSQL = !["postgres", "mysql", "sqlite"].includes(databaseSettings.dbType);
@@ -75,13 +76,19 @@ const App = () => {
     importNotebooks(file);
   };
 
+  const handleDarkModeToggle = () => {
+    setIsDarkMode(!isDarkMode);
+    document.documentElement.classList.toggle("dark", !isDarkMode);
+  };
+
   return (
     <Router>
-      <div className="bg-gray-100 min-h-screen">
+      <div className="bg-gray-100 dark:bg-gray-900 min-h-screen">
         <Navbar
           onCreateNotebook={() => addNotebook("New Notebook")}
           onExportAll={handleExportAll}
           onImportAll={handleImportAll}
+          handleDarkModeToggle={handleDarkModeToggle}
         />
         <div className="pt-16"></div>
         <Routes>
