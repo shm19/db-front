@@ -5,7 +5,7 @@ const MarkdownBlock = ({ block, updateBlock }) => {
   return (
     <div className="mb-8">
       {/* Markdown Content */}
-      <div className="mx-4 py-4 px-6 border rounded-lg bg-gray-50 border-gray-300 shadow-md transition hover:shadow-lg">
+      <div className="border rounded-lg bg-gray-50 border-gray-300 shadow-md transition hover:shadow-lg">
         <div className="flex flex-col w-full">
           {/* Markdown Editor */}
           <textarea

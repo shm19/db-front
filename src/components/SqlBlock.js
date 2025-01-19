@@ -7,6 +7,7 @@ const SqlBlock = ({ block, updateBlock, executeQuery, databaseType }) => {
   const [leftPanelWidth, setLeftPanelWidth] = useState(50);
   const containerRef = useRef(null);
   const isNonSQL = !["postgres", "mysql", "sqlite"].includes(databaseType);
+
   const runCode = async () => {
     const queryResult = await executeQuery(block.content);
     updateBlock(block.content, queryResult);
@@ -33,6 +34,76 @@ const SqlBlock = ({ block, updateBlock, executeQuery, databaseType }) => {
 
     window.addEventListener("mousemove", handleMouseMove);
     window.addEventListener("mouseup", handleMouseUp);
+  };
+
+  const renderResult = (result) => {
+    switch (result.type) {
+      case "string":
+        return (
+          <pre className="bg-gray-900 text-white p-4 rounded whitespace-pre-wrap">
+            {result.content}
+          </pre>
+        );
+
+      case "array":
+        return (
+          <div className="grid grid-cols-1 gap-4">
+            {result.content.map((item, index) => (
+              <pre
+                key={index}
+                className="bg-gray-100 text-gray-800 p-4 rounded whitespace-pre-wrap"
+              >
+                {JSON.stringify(item, null, 2)}
+              </pre>
+            ))}
+          </div>
+        );
+
+      case "object":
+        return (
+          <pre className="bg-gray-100 text-gray-800 p-4 rounded whitespace-pre-wrap">
+            {JSON.stringify(result.content, null, 2)}
+          </pre>
+        );
+
+      case "table":
+        if (result.content.length === 0) {
+          return <p className="text-gray-500 italic">No rows to display.</p>;
+        }
+        return (
+          <table className="min-w-full border border-gray-300">
+            <thead>
+              <tr className="bg-gray-100">
+                {Object.keys(result.content[0]).map((key) => (
+                  <th key={key} className="border px-4 py-2 text-left">
+                    {key}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {result.content.map((row, rowIndex) => (
+                <tr key={rowIndex}>
+                  {Object.values(row).map((value, colIndex) => (
+                    <td key={colIndex} className="border px-4 py-2">
+                      {value}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        );
+
+      case "message":
+        return <p className="text-green-500">{result.content}</p>;
+
+      case "error":
+        return <p className="text-red-500">{result.content}</p>;
+
+      default:
+        return <p className="text-gray-500 italic">Unknown result type.</p>;
+    }
   };
 
   return (
@@ -64,10 +135,7 @@ const SqlBlock = ({ block, updateBlock, executeQuery, databaseType }) => {
       {/* Results Panel */}
       <div className="flex-grow bg-gray-50 p-4 overflow-y-auto">
         {showResult ? (
-          <div
-            className="text-gray-800 text-sm"
-            dangerouslySetInnerHTML={{ __html: block.result }}
-          />
+          renderResult(block.result)
         ) : (
           <p className="text-gray-400 text-sm">Click the play button to run this cell</p>
         )}

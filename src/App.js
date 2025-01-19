@@ -26,57 +26,44 @@ const App = () => {
 
         if (isNonSQL) {
           if (typeof data === "string") {
-            return `<pre class="bg-gray-900 text-white p-4 rounded">${data}</pre>`;
+            return { type: "string", content: data };
           }
-          return `<pre class="bg-gray-900 text-white p-4 rounded">${JSON.stringify(
-            data,
-            null,
-            2
-          )}</pre>`;
+
+          if (Array.isArray(data)) {
+            return { type: "array", content: data };
+          }
+
+          if (typeof data === "object" && data !== null) {
+            return { type: "object", content: data };
+          }
+
+          return { type: "unknown", content: data };
         }
 
         if (data && Array.isArray(data)) {
           if (data.length === 0) {
-            return `<p class="text-gray-500 italic">No rows to display.</p>`;
+            return { type: "table", content: [] }; // Empty table
           }
 
-          return `<div class="overflow-x-auto">
-            <table class="min-w-full border border-gray-300">
-              <thead>
-                <tr class="bg-gray-100">
-                  ${Object.keys(data[0] || {})
-                    .map((key) => `<th class="border px-4 py-2 text-left">${key}</th>`)
-                    .join("")}
-                </tr>
-              </thead>
-              <tbody>
-                ${data
-                  .map(
-                    (row) =>
-                      `<tr>${Object.values(row)
-                        .map((value) => `<td class="border px-4 py-2">${value}</td>`)
-                        .join("")}</tr>`
-                  )
-                  .join("")}
-              </tbody>
-            </table>
-          </div>`;
-        }
-        if (data.changes && data.changes > 0) {
-          return `<p class="text-green-500">${data.changes} rows affected.</p>`;
-        }
-        if (message) {
-          return `<p class="text-green-500">${message}</p>`;
+          return { type: "table", content: data }; // Table data
         }
 
-        return `<p class="text-gray-500 italic">Query executed successfully.</p>`;
+        if (data && data.changes) {
+          return { type: "message", content: `${data.changes} rows affected.` };
+        }
+
+        if (message) {
+          return { type: "message", content: message };
+        }
+
+        return { type: "message", content: "Query executed successfully." };
       } else {
         const { error } = await response.json();
-        return `<p class="text-red-500">${error}</p>`;
+        return { type: "error", content: error };
       }
     } catch (error) {
       console.error("Error executing query:", error.message);
-      return `<p class="text-red-500">Failed to execute query. Please try again.</p>`;
+      return { type: "error", content: "Failed to execute query. Please try again." };
     }
   };
 
