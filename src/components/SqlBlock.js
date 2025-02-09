@@ -1,13 +1,13 @@
 import React, { useState, useRef } from "react";
 import CodeMirror from "@uiw/react-codemirror";
 import { sql } from "@codemirror/lang-sql";
+import { isNoSql } from "../utils/isNoSql";
 
 const SqlBlock = ({ block, updateBlock, executeQuery, databaseType }) => {
   const [showResult, setShowResult] = useState(false);
   const [leftPanelWidth, setLeftPanelWidth] = useState(50);
   const [blockHeight, setBlockHeight] = useState(200); // Height in pixels
   const containerRef = useRef(null);
-  const isNonSQL = !["postgres", "mysql", "sqlite"].includes(databaseType);
 
   const runCode = async () => {
     const queryResult = await executeQuery(block.content);
@@ -133,7 +133,7 @@ const SqlBlock = ({ block, updateBlock, executeQuery, databaseType }) => {
         >
           <CodeMirror
             value={block.content}
-            extensions={isNonSQL ? [] : [sql()]}
+            extensions={isNoSql(databaseType) ? [] : [sql()]}
             onChange={(value) => updateBlock(value)}
             theme="dark"
             placeholder={`Write your ${databaseType} query here...`}

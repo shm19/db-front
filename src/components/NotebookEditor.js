@@ -3,8 +3,9 @@ import { useParams } from "react-router-dom";
 import Block from "./Block";
 import { NotebookContext } from "../contexts/NotebookContext";
 import DatabaseSchema from "./DatabaseSchema";
+import { executeQuery } from "../utils/executeQuery";
 
-const NotebookEditor = ({ executeQuery }) => {
+const NotebookEditor = () => {
   const { notebooks, setNotebooks } = useContext(NotebookContext);
   const { id } = useParams();
   const notebook = notebooks.find((nb) => nb.id === id);

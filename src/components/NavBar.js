@@ -3,6 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import { NotebookContext } from "../contexts/NotebookContext";
 import { FaSun, FaMoon } from "react-icons/fa";
 import DatabaseSettingsModal from "../modals/DatabaseSettingsModal";
+import Logo from "../logo.svg";
 
 const Navbar = ({ onCreateNotebook, onExportAll }) => {
   const location = useLocation();
@@ -49,8 +50,12 @@ const Navbar = ({ onCreateNotebook, onExportAll }) => {
   return (
     <nav className="bg-blue-600 text-white fixed w-full z-10 shadow-md dark:bg-blue-950 dark:text-gray-100">
       <div className="container mx-auto px-4 flex justify-between items-center py-3">
-        {/* Logo */}
-        <Link to="/" className="text-2xl font-bold hover:text-gray-300 transition">
+        {/* Logo and Title */}
+        <Link
+          to="/"
+          className="flex items-center gap-2 text-2xl font-bold hover:text-gray-300 transition"
+        >
+          <img src={Logo} alt="App Logo" className="w-8 h-8" /> {/* Logo */}
           Notebook App
         </Link>
 

@@ -1,0 +1,17 @@
+# Node modules
+node_modules
+npm-debug.log
+
+# Build files
+build/
+
+# Editor/IDE specific
+.vscode
+.idea
+.DS_Store
+
+# Logs
+*.log
+
+# Temporary files
+.tmp/

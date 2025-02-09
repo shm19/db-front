@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { getSupportedDbs } from "../utils/supportedDb";
 
 const DatabaseSettingsModal = ({ isOpen, onClose, onSave, initialSettings, onTestConnection }) => {
   const [settings, setSettings] = useState({
@@ -10,9 +11,10 @@ const DatabaseSettingsModal = ({ isOpen, onClose, onSave, initialSettings, onTes
     connectionUrl: "",
   });
 
+  const supportedDbs = getSupportedDbs();
+
   const [connectionStatus, setConnectionStatus] = useState(null);
 
-  // Load initial settings (if available)
   useEffect(() => {
     if (initialSettings) {
       setSettings((prev) => ({
@@ -62,11 +64,9 @@ const DatabaseSettingsModal = ({ isOpen, onClose, onSave, initialSettings, onTes
               onChange={handleInputChange}
               className="w-full border border-gray-300 dark:border-gray-700 rounded-lg p-2 bg-white dark:bg-gray-700 dark:text-white"
             >
-              <option value="sqlite">SQLite</option>
-              <option value="mysql">MySQL</option>
-              <option value="postgres">PostgreSQL</option>
-              <option value="mongodb">MongoDB</option>
-              <option value="redis">Redis</option>
+              {supportedDbs.map((e) => (
+                <option value={e}> {e} </option>
+              ))}
             </select>
           </div>
 
