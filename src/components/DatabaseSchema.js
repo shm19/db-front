@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { isNoSql } from "../utils/isNoSql";
+import useIsDbSql from "../utils/isSql";
 
 const fetchDatabaseSchema = async (databaseSettings) => {
   try {
@@ -28,6 +28,7 @@ const DatabaseSchema = ({ databaseSettings, reRender }) => {
   const [schema, setSchema] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const { isDbSql } = useIsDbSql(databaseSettings.dbType);
 
   const fetchDatabaseSchema = async (databaseSettings) => {
     try {
@@ -90,7 +91,7 @@ const DatabaseSchema = ({ databaseSettings, reRender }) => {
             className="bg-white dark:bg-gray-700 shadow-md border border-gray-200 dark:border-gray-600 rounded-lg p-4"
           >
             <h3 className="text-md font-semibold mb-2">{key}</h3>
-            {Array.isArray(value) && !isNoSql(databaseSettings.dbType) ? (
+            {Array.isArray(value) && isDbSql ? (
               <table className="w-full text-sm text-left text-gray-600 dark:text-gray-200">
                 <thead>
                   <tr className="bg-gray-100 dark:bg-gray-600 border-b">

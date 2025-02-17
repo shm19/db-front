@@ -1,7 +1,7 @@
-import { isNoSql } from "./isNoSql";
+import { isSql } from "./isSql";
 
 export const executeQuery = async (query, databaseSettings) => {
-  const isNonSQLBool = isNoSql(databaseSettings.dbType);
+  const isNonSQLBool = await isSql(databaseSettings.dbType);
 
   try {
     const response = await fetch("http://localhost:8000/api/execute-query", {
